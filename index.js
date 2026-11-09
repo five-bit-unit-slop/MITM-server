@@ -19,6 +19,10 @@ const notFound = {
     "message": "Not found!"
 }
 
+const invalidJson = {
+    "message": "Invalid JSON"
+}
+
 const server = http.createServer((req,res) => {
     if (req.url === "/device" && req.method === "GET") {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -40,12 +44,16 @@ const server = http.createServer((req,res) => {
                     console.log(data.temperature);
                     console.log(data.humidity);
 
-                    res.writeHead(200, {"Content-Type": "application/json"});
-                    res.end(JSON.stringify(message));
+                    if (typeof data.temperature !== "number") {
+                        throw new Error("Invalid temperature data!");
+                    } else {
+                        res.writeHead(200, {"Content-Type": "application/json"});
+                        res.end(JSON.stringify(message));
+                    }
 
                 } catch {
                     res.writeHead(400, {"Content-Type": "application/json"});
-                    res.end(JSON.stringify({ "message": "Invalid JSON" }));
+                    res.end(JSON.stringify({ "message": error.message }));
                 }
             });
 
