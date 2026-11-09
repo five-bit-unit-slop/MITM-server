@@ -1,11 +1,18 @@
 export function sensorRoute(req, res) {
     if (req.method === "POST") {
-        if (req.headers["content-type"] !== "application/json") {
+
+        const expectedToken = process.env.API_TOKEN;
+        const contentType = req.headers["content-type"];
+        const Auth = req.headers["authorization"]
+
+        if (!contentType || !contentType.startsWith("application/json")) {
             res.writeHead(415, {"Content-Type": "application/json"});
             res.end(JSON.stringify({ "message": "Unsupported Media Type" }));
             return;
-        } else {
-            console.log(req.headers["authorization"]);
+        } else if (!Auth || Auth !== "Bearer " + expectedToken) {
+            res.writeHead(401, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({"message": "Unauthorized"}))
+            return;
         }
 
         let body = "";
