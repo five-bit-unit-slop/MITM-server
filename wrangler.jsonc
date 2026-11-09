@@ -1,6 +1,6 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "smart-system-mitm",
-    "main": "index.js",
+    "name": "mitm",
+    "main": "worker.js",
     "compatibility_date": "2026-11-09"
 }
