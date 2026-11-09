@@ -9,7 +9,7 @@ export function sensorRoute(req, res) {
             res.writeHead(415, {"Content-Type": "application/json"});
             res.end(JSON.stringify({ "message": "Unsupported Media Type" }));
             return;
-        } else if (!Auth || Auth !== "Bearer " + expectedToken) {
+        } else if (!expectedToken || !Auth || Auth !== "Bearer " + expectedToken) {
             res.writeHead(401, {"Content-Type": "application/json"});
             res.end(JSON.stringify({"message": "Unauthorized"}))
             return;
@@ -29,11 +29,11 @@ export function sensorRoute(req, res) {
                 console.log(data.temperature);
                 console.log(data.humidity);
 
-                if (typeof data.temperature !== "number") {
+                if (typeof data.temperature !== "number" || data.temperature < -40 || data.temperature > 85) {
                     throw new Error("Invalid temperature data!");
                 } else if (typeof data.device_id !== "string" || data.device_id.length === 0) {
                     throw new Error("Invalid device ID!");
-                } else if (typeof data.humidity !== "number") {
+                } else if (typeof data.humidity !== "number" || data.humidity < 0 || data.humidity > 100) {
                     throw new Error("Invalid humidity data!");
                 } else {
                     res.writeHead(200, {"Content-Type": "application/json"});
