@@ -19,10 +19,6 @@ const notFound = {
     "message": "Not found!"
 }
 
-const invalidJson = {
-    "message": "Invalid JSON"
-}
-
 const server = http.createServer((req,res) => {
     if (req.url === "/device" && req.method === "GET") {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -30,6 +26,13 @@ const server = http.createServer((req,res) => {
 
     } else if (req.url === "/sensor") { 
         if (req.method === "POST") {
+            if (req.headers["content-type"] !== "application/json") {
+                        res.writeHead(415, {"Content-Type": "application/json"});
+                        res.end(JSON.stringify({ "message": "Unsupported Media Type" }));
+                        return;
+            } else {
+                console.log(req.headers["authorization"]);
+            }
             let body = "";
 
             req.on("data", (chunk) => {
@@ -43,7 +46,7 @@ const server = http.createServer((req,res) => {
                     console.log(data.device_id);
                     console.log(data.temperature);
                     console.log(data.humidity);
-
+                    //auth validation
                     if (typeof data.temperature !== "number") {
                         throw new Error("Invalid temperature data!");
                     } else if (typeof data.device_id !== "string" || data.device_id.length === 0) {
