@@ -1,3 +1,4 @@
+
 export function sensorRoute(req, res) {
     if (req.method === "POST") {
 
@@ -16,12 +17,32 @@ export function sensorRoute(req, res) {
         }
 
         let body = "";
+        let bodySize = 0;
+        let bodyTooLarge = false;
+        const maxBodySize = 10 * 1024;
 
         req.on("data", (chunk) => {
+            if (bodyTooLarge) {
+                return;
+            }
+
+            bodySize += chunk.length;
+
+            if (bodySize > maxBodySize) {
+                bodyTooLarge = true;
+                res.writeHead(413, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({"message": "Request body too large"}));
+                return;
+            }
+
             body += chunk;
         });
 
         req.on("end", () => {
+            if (bodyTooLarge) {
+                return;
+            }
+
             try {
                 const data = JSON.parse(body);
 

@@ -10,7 +10,6 @@ const server = http.createServer((req,res) => {
             res.writeHead(405, {"Content-Type": "application/json"});
             res.end(JSON.stringify({ "message": "Method not allowed!" }));
         }
-
     } else if (req.url === "/sensor") {
         sensorRoute(req, res);
     } else {
