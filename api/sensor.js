@@ -46,9 +46,9 @@ export function sensorRoute(req, res) {
             try {
                 const data = JSON.parse(body);
 
-                console.log(data.device_id);
-                console.log(data.temperature);
-                console.log(data.humidity);
+                if (data === null || typeof data !== "object" || Array.isArray(data)) {
+                    throw new Error("Invalid JSON structure!");
+                }
 
                 if (typeof data.temperature !== "number" || data.temperature < -40 || data.temperature > 85) {
                     throw new Error("Invalid temperature data!");
