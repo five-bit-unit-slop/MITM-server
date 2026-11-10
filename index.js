@@ -5,7 +5,7 @@ import { sensorRoute } from "./api/sensor.js";
 
 const server = http.createServer((req,res) => {
     if (req.url === "/") {
-        fs.readFile("./index.html", (err, data) => {
+        fs.readFile("./public/index.html", (err, data) => {
             if (err) {
                 res.writeHead(500, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({ "message": "Internal server error!" }));
@@ -15,7 +15,7 @@ const server = http.createServer((req,res) => {
             res.writeHead(200, {"Content-Type": "text/html"});
             res.end(data);
         });
-    } else if (req.url === "/image.png") {
+    } else if (req.url === "/public/image.png") {
         fs.readFile("./image.png", (err, data) => {
             if (err) {
                 res.writeHead(500, {"Content-Type": "application/json"});
