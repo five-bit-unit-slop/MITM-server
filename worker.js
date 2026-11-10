@@ -1,15 +1,11 @@
+
 import http from "node:http";
 import { httpServerHandler } from "cloudflare:node";
 import { deviceRoute } from "./api/device.js";
 import { sensorRoute } from "./api/sensor.js";
-import index from "./index.html";
 
 const server = http.createServer((req, res) => {
-    if (req.url === "/") {
-        res.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
-        res.end(index);
-
-    } else if (req.url === "/device") {
+    if (req.url === "/device") {
         if (req.method === "GET") {
             deviceRoute(req, res);
         } else {
@@ -31,4 +27,16 @@ const server = http.createServer((req, res) => {
     }
 });
 
-export default httpServerHandler(server);
+const nodeHandler = httpServerHandler(server);
+
+export default {
+    async fetch(request, env, ctx) {
+        const url = new URL(request.url);
+
+        if (url.pathname === "/" || url.pathname === "/image.png") {
+            return env.ASSETS.fetch(request);
+        }
+
+        return nodeHandler(request, env, ctx);
+    }
+};
