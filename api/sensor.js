@@ -1,3 +1,4 @@
+const processedRequests = [];
 
 export function sensorRoute(req, res) {
     if (req.method === "POST") {
@@ -15,7 +16,6 @@ export function sensorRoute(req, res) {
             res.end(JSON.stringify({"message": "Unauthorized"}))
             return;
         }
-
         let body = "";
         let bodySize = 0;
         let bodyTooLarge = false;
@@ -50,6 +50,15 @@ export function sensorRoute(req, res) {
                     throw new Error("Invalid JSON structure!");
                 }
 
+                const ReqId = data.request_id;
+                if (typeof data.request_id !== "string" || data.request_id.length === 0){
+                    throw new Error("Invalid request ID!");
+                } else if (processedRequests.includes(ReqId)) {
+                    res.writeHead(409, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({ "message": "Duplicate request" }));
+                    return;
+                }
+
                 if (typeof data.temperature !== "number" || data.temperature < -40 || data.temperature > 85) {
                     throw new Error("Invalid temperature data!");
                 } else if (typeof data.device_id !== "string" || data.device_id.length === 0) {
@@ -57,6 +66,7 @@ export function sensorRoute(req, res) {
                 } else if (typeof data.humidity !== "number" || data.humidity < 0 || data.humidity > 100) {
                     throw new Error("Invalid humidity data!");
                 } else {
+                    processedRequests.push(ReqId);
                     res.writeHead(200, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({ "message": "Sensor data received" }));
                 }
