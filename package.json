@@ -1,3 +1,8 @@
 {
-    "type": "module"
+    "type": "module",
+    "scripts": {
+        "dev": "npx wrangler dev --port 8080",
+        "deploy": "npx wrangler deploy",
+        "test": "node --test"
+    }
 }

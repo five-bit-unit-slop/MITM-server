@@ -1,68 +1,55 @@
-export function createRateLimiter({
-    windowMs = 60_000,
-    maxRequests = 60
-} = {}) {
-    const requests = new Map();
+import { hashGatewayToken, getGatewayToken } from "../api/common.js";
+import { sendJson } from "../api/common.js";
 
-    let lastCleanup = Date.now();
-
-    return function rateLimiter(req, res) {
-        const now = Date.now();
-        if (now - lastCleanup >= windowMs) {
-            for (const [key, bucket] of requests) {
-                if (now >= bucket.resetAt) {
-                    requests.delete(key);
-                }
-            }
-
-            lastCleanup = now;
-        }
-
-        const ip = req.socket.remoteAddress ?? "unknown";
-        const normalizedIp = ip.startsWith("::ffff:")
-            ? ip.slice(7)
-            : ip;
-
-        const path = (req.url ?? "/").split("?")[0];
-        const key = `${normalizedIp}:${path}`;
-
-        let bucket = requests.get(key);
-        if (!bucket || now >= bucket.resetAt) {
-            bucket = {
-                count: 0,
-                resetAt: now + windowMs
-            };
-
-            requests.set(key, bucket);
-        }
-
-        bucket.count++;
-
-        const remaining = Math.max(0, maxRequests - bucket.count);
-        const retryAfter = Math.max(
-            1,
-            Math.ceil((bucket.resetAt - now) / 1000)
-        );
-
-        res.setHeader("RateLimit-Limit", maxRequests);
-        res.setHeader("RateLimit-Remaining", remaining);
-        res.setHeader("RateLimit-Reset", retryAfter);
-
-        // Reject requests exceeding the limit
-        if (bucket.count > maxRequests) {
-            res.writeHead(429, {
-                "Content-Type": "application/json",
-                "Retry-After": retryAfter
+export function createRateLimiter(env) {
+    return async function rateLimiter(req, res) {
+        if (!env.API_RATE_LIMITER || typeof env.API_RATE_LIMITER.limit !== "function") {
+            sendJson(res, 503, {
+                status: "error",
+                code: "RATE_LIMITER_NOT_CONFIGURED",
+                message: "Rate limiter is not configured."
             });
-
-            res.end(JSON.stringify({
-                error: "Too many requests",
-                retry_after: retryAfter
-            }));
-
             return false;
         }
 
-        return true;
+        try {
+            const ipAddress = req.headers["cf-connecting-ip"];
+            const ipKey = `source:${typeof ipAddress === "string" ? ipAddress : "unknown"}`;
+            const ipResult = await env.API_RATE_LIMITER.limit({ key: ipKey });
+
+            if (!ipResult.success) {
+                sendJson(res, 429, {
+                    status: "error",
+                    code: "RATE_LIMIT_EXCEEDED",
+                    message: "Too many requests from this source. Try again later."
+                }, { "Retry-After": "60" });
+                return false;
+            }
+
+            const gatewayToken = getGatewayToken(req, false);
+            if (gatewayToken) {
+                const tokenHash = await hashGatewayToken(gatewayToken);
+                const gatewayResult = await env.API_RATE_LIMITER.limit({ key: `gateway:${tokenHash}` });
+
+                if (!gatewayResult.success) {
+                    sendJson(res, 429, {
+                        status: "error",
+                        code: "RATE_LIMIT_EXCEEDED",
+                        message: "Gateway request limit exceeded. Try again later."
+                    }, { "Retry-After": "60" });
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (error) {
+            console.error("Rate limiter failed:", error);
+            sendJson(res, 503, {
+                status: "error",
+                code: "RATE_LIMITER_UNAVAILABLE",
+                message: "Rate limiter is temporarily unavailable."
+            });
+            return false;
+        }
     };
 }

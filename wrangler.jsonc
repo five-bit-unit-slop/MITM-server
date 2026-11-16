@@ -1,22 +1,18 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "mitm-server",
-	"main": "worker.js",
-	"compatibility_date": "2026-11-10",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"assets": {
-		"directory": "./public"
-	},
-	"d1_databases": [
-		{
-			"binding": "random_access_memory",
-			"database_name": "random-access-memory",
-			"database_id": "337df48c-398f-43d0-8c3e-ed2ad1e0ffb6"
-		}
-	],
-	"ratelimits": [
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "mitm-server",
+    "main": "worker.js",
+    "compatibility_date": "2026-11-16",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
+        "directory": "./public"
+    },
+    "vars": {
+        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net/api/database"
+    },
+    "ratelimits": [
         {
             "name": "API_RATE_LIMITER",
             "namespace_id": "739201",
