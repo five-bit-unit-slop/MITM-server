@@ -15,5 +15,15 @@
 			"database_name": "random-access-memory",
 			"database_id": "337df48c-398f-43d0-8c3e-ed2ad1e0ffb6"
 		}
-	]
+	],
+	"ratelimits": [
+        {
+            "name": "API_RATE_LIMITER",
+            "namespace_id": "739201",
+            "simple": {
+                "limit": 60,
+                "period": 60
+            }
+        }
+    ]
 }

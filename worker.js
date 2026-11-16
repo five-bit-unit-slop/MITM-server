@@ -3,19 +3,28 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { deviceRoute } from "./api/device.js";
 import { sensorRoute } from "./api/sensor.js";
+import { createRateLimiter } from "./migrations/ratelimiter.js";
 
-const server = http.createServer((req, res) => {
-    if (req.url === "/device") {
+const rateLimiter = createRateLimiter(env);
+
+const server = http.createServer(async (req, res) => {
+    if (!(await rateLimiter(req, res))) {
+        return;
+    }
+
+    const path = (req.url ?? "/").split("?")[0];
+
+    if (path === "/device") {
         if (req.method === "GET") {
-            deviceRoute(req, res);
+            await deviceRoute(req, res);
         } else {
             res.writeHead(405, {"Content-Type": "application/json"});
             res.end(JSON.stringify({ "message": "Method not allowed!" }));
         }
 
-    } else if (req.url === "/sensor") {
+    } else if (path === "/sensor") {
         if (req.method === "POST") {
-            sensorRoute(req, res, env);
+            await sensorRoute(req, res, env);
         } else {
             res.writeHead(405, {"Content-Type": "application/json"});
             res.end(JSON.stringify({ "message": "Method not allowed!" }));
