@@ -33,24 +33,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    if (path === "/health" && req.method === "GET") {
-        sendJson(res, 200, {
-            service: "MITM-server",
-            status: "ok"
-        });
-        return;
-    }
-
-    if (path === "/demo" && req.method === "GET") { //why is this still here?
-        sendJson(res, 200, {
-            service: "MITM-server",
-            status: "online",
-            database_bridge: "configured by AZURE_DB_BRIDGE_URL and AZURE_DB_BRIDGE_KEY"
-        });
-        return;
-    }
-
-    if (path === "/demo/health" && req.method === "GET") { //remove demo for later id say
+    if (path === "/health" && req.method === "GET") { //removed demo and added it to default /health
         await healthRoute(res, env);
         return;
     }
