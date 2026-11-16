@@ -3,7 +3,7 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { deviceRoute } from "./api/device.js";
 import { sensorRoute } from "./api/sensor.js";
-import { createRateLimiter } from "./migrations/ratelimiter.js";
+import { createRateLimiter } from "./rateLimiter.js";
 
 const rateLimiter = createRateLimiter(env);
 
