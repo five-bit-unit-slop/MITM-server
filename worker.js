@@ -41,7 +41,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    if (path === "/demo" && req.method === "GET") {
+    if (path === "/demo" && req.method === "GET") { //why is this still here?
         sendJson(res, 200, {
             service: "MITM-server",
             status: "online",
@@ -50,7 +50,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    if (path === "/demo/health" && req.method === "GET") {
+    if (path === "/demo/health" && req.method === "GET") { //remove demo for later id say
         await healthRoute(res, env);
         return;
     }
@@ -65,7 +65,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    sendJson(res, 404, {
+    sendJson(res, 404, { // else
         status: "error",
         code: "NOT_FOUND",
         message: "Route not found."
