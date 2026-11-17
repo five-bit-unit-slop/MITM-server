@@ -1,44 +1,33 @@
-import {
-    ApiError,
-    sendApiError,
-    sendJson
-} from "./common.js";
+//import
+import { sendError, sendJson } from "./common.js";
 
+//functions
 export async function healthRoute(res, env) {
-    const endpoint = env.AZURE_DB_BRIDGE_URL;
-    const functionKey = env.AZURE_DB_BRIDGE_KEY;
+    const url = env.AZURE_DB_BRIDGE_URL;
+    const key = env.AZURE_DB_BRIDGE_KEY;
 
-    if (typeof endpoint !== "string" || !endpoint.startsWith("https://") || !functionKey) {
-        sendJson(res, 503, {
-            status: "error",
-            code: "DATABASE_BRIDGE_NOT_CONFIGURED",
-            message: "Database bridge is not configured."
-        });
+    if (typeof url !== "string" || !url.startsWith("https://") || !key) {
+        sendError(res, 503, "DATABASE_BRIDGE_NOT_CONFIGURED", "Database bridge is not configured.");
         return;
     }
 
     try {
-        const response = await fetch(endpoint, {
+        const response = await fetch(url, {
             method: "GET",
-            headers: {
-                "x-functions-key": functionKey
-            },
+            headers: { "x-functions-key": key },
             signal: AbortSignal.timeout(10000)
         });
 
         let result;
         try {
             result = await response.json();
-        } catch (error) {
-            throw new ApiError(502, "INVALID_DATABASE_BRIDGE_RESPONSE", "Database bridge returned an invalid response.");
+        } catch {
+            sendError(res, 502, "INVALID_DATABASE_BRIDGE_RESPONSE", "Database bridge returned an invalid response.");
+            return;
         }
 
         if (!response.ok) {
-            sendJson(res, response.status, {
-                status: "error",
-                code: "DATABASE_UNHEALTHY",
-                message: "Database bridge health check failed."
-            });
+            sendError(res, response.status, "DATABASE_UNHEALTHY", "Database bridge health check failed.");
             return;
         }
 
@@ -46,7 +35,11 @@ export async function healthRoute(res, env) {
             status: "ok",
             database: result.status === "connected" ? "connected" : "unknown"
         });
-    } catch (error) {
-        sendApiError(res, error);
+    } catch (err) {
+        if (err.name === "TimeoutError" || err.name === "AbortError") {
+            sendError(res, 504, "DATABASE_BRIDGE_TIMEOUT", "Database bridge request timed out.");
+            return;
+        }
+        sendError(res, 503, "DATABASE_BRIDGE_UNAVAILABLE", "Database bridge is unavailable.");
     }
 }
