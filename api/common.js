@@ -1,4 +1,6 @@
-//import
+//vars
+export const BRIDGE_TIMEOUT_MS = 60_000;
+
 //functions
 export function sendJson(res, status, data, headers = {}) { //Sends a JSON response to whoever made the HTTP request.
     res.writeHead(status, {
@@ -113,7 +115,7 @@ export async function callBridge(env, payload) { //Sends data from the Cloudflar
                 "x-functions-key": key
             },
             body: JSON.stringify(payload),
-            signal: AbortSignal.timeout(10000)
+            signal: AbortSignal.timeout(BRIDGE_TIMEOUT_MS)
         });
     } catch (err) {
         if (err.name === "TimeoutError" || err.name === "AbortError") {

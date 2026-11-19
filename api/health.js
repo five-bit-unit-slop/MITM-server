@@ -1,5 +1,5 @@
 //import
-import { sendError, sendJson } from "./common.js";
+import { BRIDGE_TIMEOUT_MS, sendError, sendJson } from "./common.js";
 
 //functions
 export async function healthRoute(res, env) {
