@@ -10,7 +10,7 @@
         "directory": "./public"
     },
     "vars": {
-        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net/api/database"
+        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net/api/database" //behind a whitelist so don't even try! >:(
     },
     "ratelimits": [
         {

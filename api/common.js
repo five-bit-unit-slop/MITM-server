@@ -1,15 +1,15 @@
 //import
 //functions
-export function sendJson(res, status, data, headers = {}) {
+export function sendJson(res, status, data, headers = {}) { //Sends a JSON response to whoever made the HTTP request.
     res.writeHead(status, {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
-        ...headers
+        ...headers //Auto pastes the headers given from earlier.
     });
     res.end(JSON.stringify(data));
 }
 
-export function sendError(res, status, code, message, headers = {}) {
+export function sendError(res, status, code, message, headers = {}) { //Sends an error response using a consistent JSON structure.
     sendJson(res, status, {
         status: "error",
         code,
@@ -17,7 +17,7 @@ export function sendError(res, status, code, message, headers = {}) {
     }, headers);
 }
 
-export function getGatewayToken(req) {
+export function getGatewayToken(req) { //Extracts and performs basic format checks on the gateway authentication token.
     const auth = req.headers.authorization;
     if (typeof auth !== "string" || !auth.startsWith("Bearer ")) {
         return null;
@@ -31,13 +31,13 @@ export function getGatewayToken(req) {
     return token;
 }
 
-export async function hashToken(token) {
+export async function hashToken(token) { //Converts a gateway token into a SHA-256 hash. Made with help of ai.
     const bytes = new TextEncoder().encode(token);
     const digest = await crypto.subtle.digest("SHA-256", bytes);
     return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-export async function requireTokenHash(req, res) {
+export async function requireTokenHash(req, res) { //Requires a gateway token and returns its SHA-256 hash.
     const token = getGatewayToken(req);
     if (!token) {
         sendError(res, 401, "UNAUTHORIZED", "A valid gateway Bearer token is required.");
@@ -46,7 +46,7 @@ export async function requireTokenHash(req, res) {
     return hashToken(token);
 }
 
-export function readJsonBody(req, maxBytes = 10 * 1024) {
+export function readJsonBody(req, maxBytes = 10 * 1024) { //Reads the incoming HTTP request body, checks its size, parses its JSON and verifies that the result is an object.
     return new Promise((resolve) => {
         const chunks = [];
         let size = 0;
@@ -96,7 +96,7 @@ export function readJsonBody(req, maxBytes = 10 * 1024) {
     });
 }
 
-export async function callBridge(env, payload) {
+export async function callBridge(env, payload) { //Sends data from the Cloudflare Worker to the Azure Functions databasebridge and returns its response.
     const url = env.AZURE_DB_BRIDGE_URL;
     const key = env.AZURE_DB_BRIDGE_KEY;
 
