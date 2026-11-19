@@ -101,7 +101,7 @@ export async function callBridge(env, payload) { //Sends data from the Cloudflar
     const key = env.AZURE_DB_BRIDGE_KEY;
 
     if (typeof url !== "string" || !url.startsWith("https://") || !key) {
-        return { ok: false, status: 503, code: "DATABASE_BRIDGE_NOT_CONFIGURED", message: "Database bridge is not configured." };
+        return { ok: false, status: 503, code: "DATABASE_BRIDGE_NOT_CONFIGURED_CORRECTLY", message: "Database bridge is not configured correctly." };
     }
 
     let response;
