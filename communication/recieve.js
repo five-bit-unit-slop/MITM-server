@@ -8,7 +8,7 @@ export async function data_to_sql(req, res, env) {
         // Check gateway token
         const authorization = req.headers.authorization;
 
-        if (!authorization?.startsWith("Bearer ")) {
+        if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
@@ -16,7 +16,7 @@ export async function data_to_sql(req, res, env) {
 
         const gatewayToken = authorization.slice(7);
 
-        if (!gatewayToken) {
+        if (!gatewayToken) { //geen gateway token geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
@@ -71,6 +71,6 @@ export async function data_to_sql(req, res, env) {
         res.writeHead(500, {
             "Content-Type": "application/json"
         });
-        res.end(JSON.stringify({ error: "Internal server error" }));
+        res.end(JSON.stringify({ error: "Internal server error" })); //ivm veiligheid geen exacte reden geven aan de gebruiker.
     }
 }
