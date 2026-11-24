@@ -2,11 +2,6 @@
 import http from "node:http";
 import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
-import { deviceRoute } from "./api/device.js";
-import { healthRoute } from "./api/health.js";
-import { measurementsRoute } from "./api/measurements.js";
-import { sendError, sendJson } from "./api/common.js";
-import { checkRateLimit } from "./migrations/ratelimiter.js";
 
 //main
 const server = http.createServer(async (req, res) => {
