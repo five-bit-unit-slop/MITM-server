@@ -1,16 +1,15 @@
-
 import http from "node:http";
 import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
-import { data_to_sql } from "./receive.js";
-import { sql_to_data } from "./send.js";
+import { data_to_sql } from "./communication/recieve.js";
+import { sql_to_data } from "./communication/send.js";
 
 const server = http.createServer(async (req, res) => {
     try {
         const url = new URL(req.url ?? "/", "https://mitm.local");
         const path = url.pathname;
 
-        if (path === "/health") { //later uitbreiden naar testen verbinding met sql function
+        if (path === "/health") { // later uitbreiden naar testen verbinding met sql function
             if (req.method !== "GET") {
                 res.writeHead(405, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({ status: "Wrong methode you dumb fuck XD" }));
@@ -27,7 +26,7 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({}));
                 return;
             } else {
-                await data_to_sql(req, res);
+                await data_to_sql(req, res, env);
                 return;
             }
         }
@@ -38,7 +37,7 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({}));
                 return;
             } else {
-                await sql_to_data(req, res);
+                await sql_to_data(req, res, env);
                 return;
             }
         }
