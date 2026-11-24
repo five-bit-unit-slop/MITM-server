@@ -20,7 +20,7 @@ const server = http.createServer(async (req, res) => {
             return;
         }
 
-        if (path === "/api/sensor-data") {
+        if (path === "/api/sensor-data") { // garbage in
             if (req.method !== "POST") {
                 res.writeHead(405, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({}));
@@ -31,7 +31,7 @@ const server = http.createServer(async (req, res) => {
             }
         }
 
-        if (path === "/api/get-data") {
+        if (path === "/api/get-data") { // garbage out
             if (req.method !== "POST") {
                 res.writeHead(405, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({}));
