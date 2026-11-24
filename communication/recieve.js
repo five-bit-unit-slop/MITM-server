@@ -1,4 +1,4 @@
-import { sha265hasher } from "./local/hasher";
+import { sha265hasher } from "../local/hasher"; //shit happens, double dot so it takes root.
 
 export async function data_to_sql(req, res, env) {
     const chunks = [];
