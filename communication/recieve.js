@@ -3,6 +3,9 @@ import { sha265hasher } from "./local/hasher";
 export async function data_to_sql(req, res, env) {
     const chunks = [];
     const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
+    const tokenHash = await sha265hasher(gatewayToken);
+    const gatewayToken = authorization.slice(7);
+    let data;
 
     try {
         // Check gateway token
@@ -14,16 +17,11 @@ export async function data_to_sql(req, res, env) {
             return;
         }
 
-        const gatewayToken = authorization.slice(7);
-
         if (!gatewayToken) { //geen gateway token geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
         }
-
-        // Hash gateway token
-        const tokenHash = await sha265hasher(gatewayToken);
 
         // Read request body
         for await (const chunk of req) {
@@ -34,8 +32,6 @@ export async function data_to_sql(req, res, env) {
         const body = Buffer.concat(chunks).toString("utf8");
 
         // Parse JSON
-        let data;
-
         try {
             data = JSON.parse(body);
         } catch {
