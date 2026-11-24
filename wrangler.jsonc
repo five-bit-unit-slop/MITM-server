@@ -10,7 +10,8 @@
         "directory": "./public"
     },
     "vars": {
-        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net/api/database" //behind a whitelist so don't even try! >:(
+        "_Comment": "behind a whitelist so don't even try! >:(",
+        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net"
     },
     "ratelimits": [
         {
@@ -23,19 +24,34 @@
         }
     ],
     "observability": {
-    "logs": {
-      "enabled": true,
-      "head_sampling_rate": 1,
-      "invocation_logs": true,
-      "persist": true
+        "logs": {
+            "enabled": true,
+            "head_sampling_rate": 1,
+            "invocation_logs": true,
+            "persist": true
+        },
+        "traces": {
+            "enabled": true,
+            "head_sampling_rate": 1,
+            "persist": true
+        },
+        "issues": {
+            "enabled": true
+        }
     },
-    "traces": {
-      "enabled": true,
-      "head_sampling_rate": 1,
-      "persist": true
-    },
-    "issue_detection": {
-      "enabled": true
+    "previews": {
+        "vars": {
+            "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net"
+        },
+        "ratelimits": [
+            {
+                "name": "API_RATE_LIMITER",
+                "namespace_id": "739202",
+                "simple": {
+                    "limit": 60,
+                    "period": 60
+                }
+            }
+        ]
     }
-  }
 }
