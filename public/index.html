@@ -1,49 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MITM server</title>
-        <style>
-            html, body {
-                margin: 0;
-                width: 100%;
-                height: 100%;
-            }
-
-            img {
-                width: 100vw;
-                height: 100vh;
-                object-fit: cover;
-                display: block;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>There isn't much to this simple website...</h1>
-        <p>Maybe Ivar can make a nice drawing to display here? idk.</p>
-        <img src="image.png" alt="An image">
-        <section class="u-clearfix u-image u-section-1" id="sec-6dbc"> //temp
-      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-        <div class="u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
-          <div class="u-layout">
-            <div class="u-layout-row">
-              <div class="u-container-style u-layout-cell u-left-cell u-palette-3-base u-size-20 u-layout-cell-1">
-                <div class="u-container-layout u-container-layout-1"></div>
-              </div>
-              <div class="u-container-style u-layout-cell u-size-36 u-layout-cell-2">
-                <div class="u-container-layout u-valign-middle u-container-layout-2">
-                  <h1 class="u-custom-font u-text u-text-1">Minimal</h1>
-                  <h4 class="u-custom-font u-text u-text-default u-text-2">building future</h4>
-                  <p class="u-text u-text-default u-text-3">Europe's homes, businesses and public buildings sap up about 40% of all energy in circulation, more power than in either the industrial (32%) or transport (28%) sectors. This translates into about 20 exajoules of energy per year - the rough equivalent of 3.5 billion barrels of oi.</p>
-                  <a href="#" class="u-border-2 u-border-grey-dark-1 u-btn u-btn-rectangle u-button-style u-none u-btn-1">read more</a>
-                </div>
-              </div>
-              <div class="u-black u-container-style u-layout-cell u-right-cell u-size-4 u-layout-cell-3">
-                <div class="u-container-layout u-container-layout-3"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    </body>
+<head>
+    <title>MITM server</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background: url('image.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        }
+        h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 5vw, 4rem); }
+        p  { margin: 0; font-size: clamp(1rem, 2.5vw, 1.5rem); max-width: 90%; }
+    </style>
+</head>
+<body>
+    <h1>There isn't much to this simple website…</h1>
+    <p>Maybe Ivar can make a nice drawing to display here? idk.</p>
+    <p>↓ Some musit to enjoy :) </p>
+    <p><br></p>
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/5dPwBWvmcbQ?si=HqCYydgbpQHJcxXf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</body>
 </html>
