@@ -1,5 +1,6 @@
 
 import http from "node:http";
+import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./receive.js";
 import { sql_to_data } from "./send.js";
