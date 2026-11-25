@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MITM server</title>
-        <style>
-            html, body {
-                margin: 0;
-                width: 100%;
-                height: 100%;
-            }
-
-            img {
-                width: 100vw;
-                height: 100vh;
-                object-fit: cover;
-                display: block;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>There isn't much to this simple website...</h1>
-        <p>Maybe Ivar can make a nice drawing to display here? idk.</p>
-        <img src="image.png" alt="An image">
-    </body>
+<head>
+    <title>MITM server</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background: url('image.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        }
+        h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 5vw, 4rem); }
+        p  { margin: 0; font-size: clamp(1rem, 2.5vw, 1.5rem); max-width: 90%; }
+    </style>
+</head>
+<body>
+    <h1>There isn't much to this simple website…</h1>
+    <p>Maybe Ivar can make a nice drawing to display here? idk.</p>
+    <p>↓ Some musit to enjoy :) </p>
+    <p><br></p>
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/5dPwBWvmcbQ?si=HqCYydgbpQHJcxXf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</body>
 </html>
