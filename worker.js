@@ -3,6 +3,7 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./communication/recieve.js";
 import { sql_to_data } from "./communication/send.js";
+import { json } from "node:stream/consumers";
 
 const server = http.createServer(async (req, res) => {
     try {
@@ -43,8 +44,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         if (path === "/auth") {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            
+            res.writeHead(200, { "Content-Type": "application/json" }); //expand to d1 db later for actual authentification.
+            res.end(JSON.stringify({auth: "OK"}))
         }
 
         const error404 = { error: `uh, ${path} doesnt exist.` };
