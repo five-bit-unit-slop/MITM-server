@@ -3,7 +3,6 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./communication/recieve.js";
 import { sql_to_data } from "./communication/send.js";
-import { json } from "node:stream/consumers";
 
 const server = http.createServer(async (req, res) => {
     try {

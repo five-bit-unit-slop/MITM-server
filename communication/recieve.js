@@ -3,29 +3,31 @@ import { sha265hasher } from "../local/hasher.js"; //shit happens, double dot so
 export async function data_to_sql(req, res, env) {
     const chunks = [];
     const authorization = req.headers.authorization; // Check gateway token
-    const gatewayToken = authorization.slice(7);
     let data;
-    if (!env.AZURE_DB_BRIDGE_URL|| !env.AZURE_DB_BRIDGE_KEY) {
+
+    if (!env.AZURE_DB_BRIDGE_URL || !env.AZURE_DB_BRIDGE_KEY) {
         res.writeHead(500, {"Content-Type": "application/json"});
-        res.end(JSON.stringify({error: "env not set. Please check!"}))
+        res.end(JSON.stringify({error: "env not set. Please check!"}));
         return;
     }
 
     try {
-        const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`; //inside try because they can fail, eg env not set.
-        const tokenHash = await sha265hasher(gatewayToken);
-
         if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
         }
 
+        const gatewayToken = authorization.slice(7); //cleanup for hasher
+
         if (!gatewayToken) { //geen gateway token geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
         }
+
+        const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`; //inside try because they can fail, eg env not set.
+        const tokenHash = await sha265hasher(gatewayToken);
 
         // Read request body
         for await (const chunk of req) {

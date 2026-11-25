@@ -4,33 +4,36 @@ export async function sql_to_data(req, res, env) {
     let data;
     const chunks = [];
     const authorization = req.headers.authorization;
-    const gatewayToken = authorization.slice(7);
-    const headers = {
-    "Content-Type": "application/json",
-    "x-functions-key": env.AZURE_DB_BRIDGE_KEY
-    };
-    if (!env.AZURE_DB_BRIDGE_URL|| !env.AZURE_DB_BRIDGE_KEY) {
+
+    if (!env.AZURE_DB_BRIDGE_URL || !env.AZURE_DB_BRIDGE_KEY) {
         res.writeHead(500, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "env not set. Please check!"}));
         return;
     };
 
-    try{ //basically a copy of recieve.js but modified...?
+    try { //basically a copy of recieve.js but modified...?
         if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
         }
 
+        const gatewayToken = authorization.slice(7); //cleanup for hasher
+
         if (!gatewayToken) { //geen gateway token geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
         }
+
         //inside try because they can fail, eg env not set.
         const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
         const tokenHash = await sha265hasher(gatewayToken);
 
+        const headers = {
+            "Content-Type": "application/json",
+            "x-functions-key": env.AZURE_DB_BRIDGE_KEY
+        };
 
         for await (const chunk of req) {
             chunks.push(chunk);
@@ -47,14 +50,14 @@ export async function sql_to_data(req, res, env) {
         }
 
         const response = await fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-            action: "measurement.list",
-            gateway_token_hash: tokenHash,
-            device_id: data.device_id ?? null,
-            limit: data.limit ?? 50
-        })
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                action: "measurement.list",
+                gateway_token_hash: tokenHash,
+                device_id: data.device_id ?? null,
+                limit: data.limit ?? 50
+            })
         });
 
         const result = await response.json();
