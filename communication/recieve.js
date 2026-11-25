@@ -8,6 +8,7 @@ export async function data_to_sql(req, res, env) {
     if (!env.AZURE_DB_BRIDGE_URL|| !env.AZURE_DB_BRIDGE_KEY) {
         res.writeHead(500, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "env not set. Please check!"}))
+        return;
     }
 
     try {

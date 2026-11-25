@@ -4,6 +4,7 @@ export async function sql_to_data(req, res, env) {
     let data;
     const chunks = [];
     const authorization = req.headers.authorization;
+    const gatewayToken = authorization.slice(7);
     const headers = {
     "Content-Type": "application/json",
     "x-functions-key": env.AZURE_DB_BRIDGE_KEY
@@ -28,7 +29,6 @@ export async function sql_to_data(req, res, env) {
         }
         //inside try because they can fail, eg env not set.
         const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
-        const gatewayToken = authorization.slice(7);
         const tokenHash = await sha265hasher(gatewayToken);
 
 
