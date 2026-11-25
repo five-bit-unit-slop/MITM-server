@@ -2,12 +2,15 @@ import { sha265hasher } from "../local/hasher.js"; //shit happens, double dot so
 
 export async function data_to_sql(req, res, env) {
     const chunks = [];
+    const authorization = req.headers.authorization; // Check gateway token
     const gatewayToken = authorization.slice(7);
     let data;
+    if (typeof env.AZURE_DB_BRIDGE_URL !== "undefined" || typeof env.AZURE_DB_BRIDGE_KEY !== "undefined") {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({error: "env not set. Please check!"}))
+    }
 
     try {
-        // Check gateway token
-        const authorization = req.headers.authorization;
         const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`; //inside try because they can fail, eg env not set.
         const tokenHash = await sha265hasher(gatewayToken);
 
