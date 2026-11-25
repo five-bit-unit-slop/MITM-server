@@ -3,11 +3,12 @@ import { sha265hasher } from "../local/hasher.js";
 export async function sql_to_data(req, res, env) {
     let data;
     const chunks = [];
+    const authorization = req.headers.authorization;
     const headers = {
     "Content-Type": "application/json",
     "x-functions-key": env.AZURE_DB_BRIDGE_KEY
     };
-    if (!typeof env.AZURE_DB_BRIDGE_URL !== "undefined" || !typeof env.AZURE_DB_BRIDGE_KEY !== "undefined") {
+    if (!env.AZURE_DB_BRIDGE_URL|| !env.AZURE_DB_BRIDGE_KEY) {
         res.writeHead(500, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "env not set. Please check!"}));
         return;
@@ -27,7 +28,6 @@ export async function sql_to_data(req, res, env) {
         }
         //inside try because they can fail, eg env not set.
         const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
-        const authorization = req.headers.authorization;
         const gatewayToken = authorization.slice(7);
         const tokenHash = await sha265hasher(gatewayToken);
 
