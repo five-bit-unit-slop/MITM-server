@@ -1,15 +1,15 @@
-import { sha265hasher } from "../local/hasher"; //shit happens, double dot so it takes root.
+import { sha265hasher } from "../local/hasher.js"; //shit happens, double dot so it takes root.
 
 export async function data_to_sql(req, res, env) {
     const chunks = [];
-    const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
-    const tokenHash = await sha265hasher(gatewayToken);
     const gatewayToken = authorization.slice(7);
     let data;
 
     try {
         // Check gateway token
         const authorization = req.headers.authorization;
+        const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`; //inside try because they can fail, eg env not set.
+        const tokenHash = await sha265hasher(gatewayToken);
 
         if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
