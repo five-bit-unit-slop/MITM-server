@@ -23,7 +23,7 @@ const server = http.createServer(async (req, res) => {
         if (path === "/api/sensor-data") { // garbage in
             if (req.method !== "POST") {
                 res.writeHead(405, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({}));
+                res.end(JSON.stringify({error: "Wrong method dipshit :)"}));
                 return;
             } else {
                 await data_to_sql(req, res, env);
@@ -34,12 +34,17 @@ const server = http.createServer(async (req, res) => {
         if (path === "/api/get-data") { // garbage out
             if (req.method !== "POST") {
                 res.writeHead(405, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({}));
+                res.end(JSON.stringify({error: "Wrong method dipshit :)"}));
                 return;
             } else {
                 await sql_to_data(req, res, env);
                 return;
             }
+        }
+
+        if (path === "/auth") {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            
         }
 
         const error404 = { error: `uh, ${path} doesnt exist.` };

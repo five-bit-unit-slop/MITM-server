@@ -5,7 +5,7 @@ export async function data_to_sql(req, res, env) {
     const authorization = req.headers.authorization; // Check gateway token
     const gatewayToken = authorization.slice(7);
     let data;
-    if (typeof env.AZURE_DB_BRIDGE_URL !== "undefined" || typeof env.AZURE_DB_BRIDGE_KEY !== "undefined") {
+    if (!typeof env.AZURE_DB_BRIDGE_URL !== "undefined" || !typeof env.AZURE_DB_BRIDGE_KEY !== "undefined") {
         res.writeHead(500, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "env not set. Please check!"}))
     }

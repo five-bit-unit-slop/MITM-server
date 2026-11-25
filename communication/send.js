@@ -7,18 +7,13 @@ export async function sql_to_data(req, res, env) {
     "Content-Type": "application/json",
     "x-functions-key": env.AZURE_DB_BRIDGE_KEY
     };
-    if (typeof env.AZURE_DB_BRIDGE_URL !== "undefined" || typeof env.AZURE_DB_BRIDGE_KEY !== "undefined") {
+    if (!typeof env.AZURE_DB_BRIDGE_URL !== "undefined" || !typeof env.AZURE_DB_BRIDGE_KEY !== "undefined") {
         res.writeHead(500, {"Content-Type": "application/json"});
-        res.end(JSON.stringify({error: "env not set. Please check!"}))
-    }
+        res.end(JSON.stringify({error: "env not set. Please check!"}));
+        return;
+    };
 
     try{ //basically a copy of recieve.js but modified...?
-        //inside try because they can fail, eg env not set.
-        const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
-        const authorization = req.headers.authorization;
-        const gatewayToken = authorization.slice(7);
-        const tokenHash = await sha265hasher(gatewayToken);
-
         if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
             res.writeHead(401, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: "Unauthorized" }));
@@ -30,6 +25,12 @@ export async function sql_to_data(req, res, env) {
             res.end(JSON.stringify({ error: "Unauthorized" }));
             return;
         }
+        //inside try because they can fail, eg env not set.
+        const url = `${env.AZURE_DB_BRIDGE_URL}/api/database`;
+        const authorization = req.headers.authorization;
+        const gatewayToken = authorization.slice(7);
+        const tokenHash = await sha265hasher(gatewayToken);
+
 
         for await (const chunk of req) {
             chunks.push(chunk);
