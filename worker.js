@@ -45,6 +45,7 @@ const server = http.createServer(async (req, res) => {
         if (path === "/auth") {
             res.writeHead(200, { "Content-Type": "application/json" }); //expand to d1 db later for actual authentification.
             res.end(JSON.stringify({auth: "OK"}))
+            return;
         }
 
         const error404 = { error: `uh, ${path} doesnt exist.` };
