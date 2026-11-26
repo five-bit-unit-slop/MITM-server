@@ -1,6 +1,6 @@
 # MITM Server
 
-Cloudflare Worker between the Raspberry Pi Gateway and the Azure DB Bridge.
+Cloudflare Worker between the Raspberry Pi Gateway and the Azure MSSQL server.
 
 ## How does it work?
 
