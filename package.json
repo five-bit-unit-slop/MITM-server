@@ -6,6 +6,7 @@
         "test": "node --test"
     },
     "dependencies": {
-        "edgewire": "^0.1.5"
+        "edgewire": "^0.1.5",
+        "tedious": "^20.4.3"
     }
 }
