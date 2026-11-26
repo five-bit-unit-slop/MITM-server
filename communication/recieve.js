@@ -49,7 +49,7 @@ export async function data_to_sql(req, res, env) {
         }
 
         const request = new Request(
-        'SELECT * FROM Users WHERE Id = @id',
+        'SELECT 1 AS connection_test;', //minimal connectivity mvp test
         (err, rowCount) => {
             connection.close();
             resolve(new Response(JSON.stringify({ rowCount })));
