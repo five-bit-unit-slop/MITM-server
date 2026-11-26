@@ -4,6 +4,7 @@ patchNetModule();
 import { Connection, Request } from 'tedious';
 
 export async function data_to_sql(req, res, env) {
+    const authorization = req.headers.authorization;
     //auth checker
     if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
         res.writeHead(401, { "Content-Type": "application/json" });

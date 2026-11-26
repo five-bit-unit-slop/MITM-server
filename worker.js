@@ -37,7 +37,7 @@ const server = http.createServer(async (req, res) => {
             } else {
                 try {
                 const response = await data_to_sql(req,res,env);
-                const body = response.text
+                const body = await response.text();
                 const code = response.status
                 res.writeHead(code, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(body))
