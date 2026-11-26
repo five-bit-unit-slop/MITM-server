@@ -35,8 +35,16 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({error:"Wrong methode dipshit :)"}));
                 return;
             } else {
-                await data_to_sql(req,res,env);
-                return;
+                try {
+                const response = await data_to_sql(req,res,env);
+                const body = response.text
+                const code = response.status
+                res.writeHead(code, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(body))
+                } catch {
+                    res.writeHead(500, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({error: "Internal server error"}));
+                };
             }
         }
 

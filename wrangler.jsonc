@@ -16,7 +16,7 @@
         "DB_PORT": "1433",
         "DB_NAME": "SmartSystemDB",
         "DB_USER": "WorkerService",
-        "DB_DB_ENCRYPT": "true"
+        "DB_ENCRYPT": "true"
     },
     "observability": {
         "logs": {

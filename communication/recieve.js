@@ -16,8 +16,8 @@ export async function data_to_sql(req, res, env) {
     options: {
         database: env.DB_NAME,
         port: 1433,
-        encrypt: true,
-        trustServerCertificate: true,
+        encrypt: true, //obv
+        trustServerCertificate: false, //zero trust
     },
     });
 
