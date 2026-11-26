@@ -1,6 +1,6 @@
-import { sha265hasher } from "../local/hasher.js";
+import { sha265hasher } from "../../local/hasher.js";
 
-export async function sql_to_data(req, res, env) {
+export async function legacy_sql_to_data(req, res, env) {
     let data;
     const chunks = [];
     const authorization = req.headers.authorization;

@@ -1,3 +1,5 @@
 .env
 .wrangler
 .vscode
+node_modules/
+secret.md

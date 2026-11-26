@@ -11,18 +11,13 @@
     },
     "vars": {
         "_Comment": "behind a whitelist so don't even try! >:(",
-        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net"
+        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net",
+        "DB_HOST": "smart-system.database.windows.net",
+        "DB_PORT": "1433",
+        "DB_NAME": "SmartSystemDB",
+        "DB_USER": "WorkerService",
+        "DB_DB_ENCRYPT": "true"
     },
-    "ratelimits": [
-        {
-            "name": "API_RATE_LIMITER",
-            "namespace_id": "739201",
-            "simple": {
-                "limit": 60,
-                "period": 60
-            }
-        }
-    ],
     "observability": {
         "logs": {
             "enabled": true,
@@ -38,20 +33,5 @@
         "issues": {
             "enabled": true
         }
-    },
-    "previews": {
-        "vars": {
-            "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net"
-        },
-        "ratelimits": [
-            {
-                "name": "API_RATE_LIMITER",
-                "namespace_id": "739202",
-                "simple": {
-                    "limit": 60,
-                    "period": 60
-                }
-            }
-        ]
     }
 }

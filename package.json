@@ -4,5 +4,8 @@
         "dev": "npx wrangler dev --port 8080",
         "deploy": "npx wrangler deploy",
         "test": "node --test"
+    },
+    "dependencies": {
+        "edgewire": "^0.1.5"
     }
 }
