@@ -4,6 +4,21 @@ patchNetModule();
 import { Connection, Request } from 'tedious';
 
 export async function data_to_sql(req, res, env) {
+    //auth checker
+    if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
+        res.writeHead(401, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Unauthorized" }));
+        return;
+    };
+
+    const gatewayToken = authorization.slice(7); //cleanup for hasher
+
+    if (!gatewayToken) { //geen gateway token geen toegang
+        res.writeHead(401, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Unauthorized" }));
+        return;
+    };
+
     const connection = new Connection({
     server: env.DB_HOST,
     authentication: {
