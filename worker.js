@@ -4,10 +4,6 @@ import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./communication/recieve.js";
 import { authLogin, authRegister } from "./local/auth.ts";
 
-//legacy -> will be decapritated
-import { legacy_data_to_sql } from "./communication/legacy/recieve.js";
-import { legacy_sql_to_data } from "./communication/legacy/send.js";
-
 const server = http.createServer(async (req, res) => {
     try {
         const url = new URL(req.url ?? "/", "https://mitm.local");
