@@ -1,7 +1,7 @@
 import { Client } from "pg";
 
 export async function data_to_sql(req, res, env) {
-    if (false) {
+    if (true) {
         res.writeHead(423, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "System is shut off for now" }));
         return;
