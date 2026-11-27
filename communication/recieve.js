@@ -2,7 +2,7 @@ import { Client } from "pg";
 
 export async function data_to_sql(req, res, env) {
     const allowSensorReceiving = await env.SETTINGS.get("allow_sensor_receiving");
-    if (allowSensorReceiving === "false") {
+    if (allowSensorReceiving !== "true") {
         res.writeHead(423, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Sending data is disabled at this moment." }));
         return;

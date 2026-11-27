@@ -2,7 +2,7 @@ import http from "node:http";
 import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./communication/recieve.js";
-import { auth } from "./local/auth.ts";
+import { authLogin, authRegister } from "./local/auth.ts";
 
 //legacy -> will be decapritated
 import { legacy_data_to_sql } from "./communication/legacy/recieve.js";
@@ -24,8 +24,15 @@ const server = http.createServer(async (req, res) => {
             return;
         }
 
-        if (path === "/auth") {
-            await auth(req,res,env);
+        if (path === "/auth/login") {
+            await authLogin(req,res,env);
+            return;
+        } else if (path === "/auth/register") {
+            await authRegister(req,res,env);
+            return;
+        } else if (path === "/auth") {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Expected /auth/login or /auth/register." }));
             return;
         }
 

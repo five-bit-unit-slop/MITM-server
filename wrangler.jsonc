@@ -10,7 +10,7 @@
 		"directory": "./public"
 	},
 	"vars": {
-		"_Comment": "behind a whitelist so don't even try! >:(",
+		"_Comment": "behind a whitelist so don't even try! >:(. ANYWAY: legacy shit, so will be removed shortly.",
 		"AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net",
 		"DB_HOST": "smart-system.database.windows.net",
 		"DB_PORT": "1433",
@@ -36,7 +36,7 @@
 	],
 	"kv_namespaces": [
 		{
-			"binding": "KV",
+			"binding": "SETTINGS",
 			"id": "e69d3a9408d544b8a06069097a947773"
 		}
 	]
