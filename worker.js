@@ -25,7 +25,12 @@ const server = http.createServer(async (req, res) => {
         }
 
         if (path === "/auth/login") {
-            await authLogin(req,res,env);
+            if (req.method !== "POST") {
+                res.writeHead(405, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ status: "Wrong methode you dumb fuck XD" }));
+            } else {
+                await authLogin(req,res,env);
+            }
             return;
         } else if (path === "/auth/register") {
             await authRegister(req,res,env);
@@ -54,7 +59,6 @@ const server = http.createServer(async (req, res) => {
         }
 
         //legacy stuff
-
         if (path === "/api/legacy/sensor-data") { // garbage in
             if (req.method !== "POST") {
                 res.writeHead(405, { "Content-Type": "application/json" });

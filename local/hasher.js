@@ -2,7 +2,7 @@ import { argon2id, argon2Verify } from "hash-wasm";
 
 // https://stackoverflow.com/questions/59777670/how-can-i-hash-a-string-with-sha256
 // basically just the code of this above.
-export async function sha265hasher(input) {
+export async function sha256hasher(input) {
     const textAsBuffer = new TextEncoder().encode(input);
     const hashBuffer = await crypto.subtle.digest("SHA-256", textAsBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
