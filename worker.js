@@ -59,26 +59,10 @@ const server = http.createServer(async (req, res) => {
         }
 
         //legacy stuff
-        if (path === "/api/legacy/sensor-data") { // garbage in
-            if (req.method !== "POST") {
-                res.writeHead(405, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({error: "Wrong method dipshit :)"}));
-                return;
-            } else {
-                await legacy_data_to_sql(req, res, env);
-                return;
-            }
-        }
-
-        if (path === "/api/legacy/get-data") { // garbage out
-            if (req.method !== "POST") {
-                res.writeHead(405, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({error: "Wrong method dipshit :)"}));
-                return;
-            } else {
-                await legacy_sql_to_data(req, res, env);
-                return;
-            }
+        if (path.startsWith("/legacy/")) {
+            res.writeHead(404, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({error: "This endpoint has been deprecated and is no longer available."}));
+            return;
         }
 
 
