@@ -1,9 +1,10 @@
 import { Client } from "pg";
 
 export async function data_to_sql(req, res, env) {
-    if (true) {
+    const allowSensorReceiving = await env.SETTINGS.get("allow_sensor_receiving");
+    if (allowSensorReceiving === "false") {
         res.writeHead(423, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "System is shut off for now" }));
+        res.end(JSON.stringify({ error: "Sending data is disabled at this moment." }));
         return;
     }
     const authorization = req.headers.authorization;

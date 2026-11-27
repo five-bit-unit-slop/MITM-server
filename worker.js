@@ -2,7 +2,7 @@ import http from "node:http";
 import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./communication/recieve.js";
-import { auth } from "./local/auth.js";
+import { auth } from "./local/auth.ts";
 
 //legacy -> will be decapritated
 import { legacy_data_to_sql } from "./communication/legacy/recieve.js";

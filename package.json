@@ -6,6 +6,7 @@
         "test": "node --test"
     },
     "dependencies": {
+        "hash-wasm": "^4.13.0",
         "pg": "^8.23.1"
     },
     "devDependencies": {

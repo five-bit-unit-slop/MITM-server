@@ -1,32 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MITM server</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
     <style>
         html, body {
             margin: 0;
             height: 100%;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Roboto', Arial, Helvetica, sans-serif;
         }
+
         body {
-            background: url('image.png') center/cover no-repeat;
+            background: url('image.png') center / cover no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: #fff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
-        h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 5vw, 4rem); }
-        p  { margin: 0; font-size: clamp(1rem, 2.5vw, 1.5rem); max-width: 90%; }
+
+        h1, p {
+            width: fit-content;
+            max-width: 90%;
+            padding: 0.2em 0.45em;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 0.25em;
+        }
+
+        h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(2rem, 5vw, 4rem);
+        }
+
+        p {
+            margin: 0;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+        }
+
+        iframe {
+            width: min(560px, 90vw);
+            aspect-ratio: 16 / 9;
+            height: auto;
+            border: 0;
+        }
     </style>
 </head>
 <body>
     <h1>There isn't much to this simple website…</h1>
     <p>Maybe Ivar can make a nice drawing to display here? idk.</p>
-    <p>↓ Some music to enjoy :) </p>
+    <p>↓ Some music to enjoy :)</p>
     <p><br></p>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/-NqdYdxuHqg?si=PwM51BOlV15Cb51n&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>    
+    <iframe
+        src="https://www.youtube.com/embed/-NqdYdxuHqg?si=PwM51BOlV15Cb51n&amp;controls=0"
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+    </iframe>
 </body>
 </html>

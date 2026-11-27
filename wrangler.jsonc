@@ -1,43 +1,43 @@
 {
-    "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "mitm-server",
-    "main": "worker.js",
-    "compatibility_date": "2026-11-16",
-    "compatibility_flags": [
-        "nodejs_compat"
-    ],
-    "assets": {
-        "directory": "./public"
-    },
-    "vars": {
-        "_Comment": "behind a whitelist so don't even try! >:(",
-        "AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net",
-        "DB_HOST": "smart-system.database.windows.net",
-        "DB_PORT": "1433",
-        "DB_NAME": "SmartSystemDB",
-        "DB_USER": "WorkerService",
-        "DB_ENCRYPT": "true"
-    },
-    "observability": {
-        "logs": {
-            "enabled": true,
-            "head_sampling_rate": 1,
-            "invocation_logs": true,
-            "persist": true
-        },
-        "traces": {
-            "enabled": true,
-            "head_sampling_rate": 1,
-            "persist": true
-        },
-        "issues": {
-            "enabled": true
-        }
-    },
-    "hyperdrive": [
-        {
-            "binding": "HYPERDRIVE",
-            "id": "a301b8900e54401fa733e4a4ecf743b6"
-        }
-    ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "mitm-server",
+	"main": "worker.js",
+	"compatibility_date": "2026-11-16",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": "./public"
+	},
+	"vars": {
+		"_Comment": "behind a whitelist so don't even try! >:(",
+		"AZURE_DB_BRIDGE_URL": "https://smartsystem-db-bridge-dxfhcce6dvesf4dj.swedencentral-01.azurewebsites.net",
+		"DB_HOST": "smart-system.database.windows.net",
+		"DB_PORT": "1433",
+		"DB_NAME": "SmartSystemDB",
+		"DB_USER": "WorkerService",
+		"DB_ENCRYPT": "true"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			"id": "a301b8900e54401fa733e4a4ecf743b6"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "smart_system_identity",
+			"database_name": "smart-system-identity",
+			"database_id": "5e9f583d-0ed3-457e-8847-9fec64026a79"
+		}
+	],
+	"kv_namespaces": [
+		{
+			"binding": "KV",
+			"id": "e69d3a9408d544b8a06069097a947773"
+		}
+	]
 }
