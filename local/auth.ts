@@ -1,3 +1,4 @@
+
 import { readBody } from "../local/readBody";
 import { passverify, sha256hasher } from "../local/hasher.js"
 
@@ -15,18 +16,19 @@ export async function authLogin(req,res,env) {
         body = await readBody(req);
         data = JSON.parse(body);
     } catch (error) {
+        console.error("Login: Request body parsing failed:", error);
         res.writeHead(400, {"Content-Type": "application/json"});
         res.end(JSON.stringify({auth: "Malformed request body."}));
         return;
     }
 
-    if (data === null || typeof data !== "object" || Array.isArray(data)) { //object check
-    res.writeHead(400, {"Content-Type": "application/json"});
-    res.end(JSON.stringify({error: "Request body must be a JSON object."}));
-    return;
+    if (data === null || typeof data !== "object" || Array.isArray(data)) {
+        res.writeHead(400, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({error: "Request body must be a JSON object."}));
+        return;
     }
 
-    if (typeof data.username !== "string" || typeof data.password !== "string") { //object validation
+    if (typeof data.username !== "string" || typeof data.password !== "string") {
         res.writeHead(400, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "Username and password must be strings."}));
         return;
@@ -40,17 +42,18 @@ export async function authLogin(req,res,env) {
 
     let result_select_username;
     try {
-    result_select_username = await env.smart_system_identity // Checks if current givenup username exists
-				.prepare("SELECT * FROM Users WHERE Username = ?")
-				.bind(data.username)
-				.run();
-    } catch {
+        result_select_username = await env.smart_system_identity
+            .prepare("SELECT * FROM Users WHERE Username = ?")
+            .bind(data.username)
+            .run();
+    } catch (error) {
+        console.error("Login: D1 username lookup failed:", error);
         res.writeHead(500, {"Content-type": "application/json"});
         res.end(JSON.stringify({error:"Internal server error."}));
         return;
     }
 
-    if (result_select_username.results.length === 0 || result_select_username.results[0].is_active === 0) { //no results found
+    if (result_select_username.results.length === 0 || result_select_username.results[0].is_active === 0) {
         res.writeHead(401, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "Credentials invalid."}))
         return;
@@ -58,26 +61,28 @@ export async function authLogin(req,res,env) {
 
     let pass_correct = false;
     try {
-        pass_correct = await passverify(data.password, result_select_username.results[0].password_hash); //password verification
-    } catch {
+        pass_correct = await passverify(data.password, result_select_username.results[0].password_hash);
+    } catch (error) {
+        console.error("Login: Password verification failed:", error);
         res.writeHead(500, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "Internal server error."}));
         return;
     }
     
-    if (pass_correct) { //verify the password
+    if (pass_correct) {
         const token = generateToken("user");
-        try{
-        const tokenHash = await sha256hasher(token);
-        const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString()
-        await env.smart_system_identity
-        .prepare("INSERT INTO UserSessions (ID, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)")
-        .bind(crypto.randomUUID(), result_select_username.results[0].ID, tokenHash, expiresAt)
-        .run();
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.end(JSON.stringify({status: "ok", token: token, expires_at: expiresAt}));
-        return;
-        } catch {
+        try {
+            const tokenHash = await sha256hasher(token);
+            const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString()
+            await env.smart_system_identity
+                .prepare("INSERT INTO UserSessions (ID, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)")
+                .bind(crypto.randomUUID(), result_select_username.results[0].ID, tokenHash, expiresAt)
+                .run();
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({status: "ok", token: token, expires_at: expiresAt}));
+            return;
+        } catch (error) {
+            console.error("Login: Session creation failed:", error);
             res.writeHead(500, {"Content-Type": "application/json"});
             res.end(JSON.stringify({error: "Internal server error."}));
             return;
