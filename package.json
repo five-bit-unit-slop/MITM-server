@@ -6,7 +6,9 @@
         "test": "node --test"
     },
     "dependencies": {
-        "edgewire": "^0.1.5",
-        "tedious": "^20.4.3"
+        "pg": "^8.23.1"
+    },
+    "devDependencies": {
+        "@types/pg": "^8.23.1"
     }
 }

@@ -1,10 +1,13 @@
-import { patchNetModule } from 'edgewire'; // https://coey.dev/edgewire
-patchNetModule();
-
-import { Connection, Request } from 'tedious';
+import { Client } from "pg";
 
 export async function data_to_sql(req, res, env) {
+    if (false) {
+        res.writeHead(423, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "System is shut off for now" }));
+        return;
+    }
     const authorization = req.headers.authorization;
+    const client = new Client({ connectionString: env.HYPERDRIVE.connectionString });
     //auth checker
     if (!authorization?.startsWith("Bearer ")) { // geen bearer geen toegang
         res.writeHead(401, { "Content-Type": "application/json" });
@@ -20,46 +23,16 @@ export async function data_to_sql(req, res, env) {
         return;
     };
 
-    const connection = new Connection({
-    server: env.DB_HOST,
-    authentication: {
-        type: 'default',
-        options: {
-        userName: env.DB_USER,
-        password: env.DB_PASSWORD,
-        },
-    },
-    options: {
-        database: env.DB_NAME,
-        port: 1433,
-        encrypt: true, //obv
-        trustServerCertificate: false, //zero trust
-    },
-    });
+    try {
+        await client.connect();
+        // Sample SQL query
+        const result = await client.query("SELECT * FROM pg_tables");
 
-    return new Promise((resolve) => {
-    connection.on('connect', (err) => {
-        if (err) {
-        resolve(
-            new Response(JSON.stringify({ error: err.message }), {
-            status: 500,
-            }),
-        );
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({result: result.rows}));
         return;
-        }
-
-        const request = new Request(
-        'SELECT 1 AS connection_test;', //minimal connectivity mvp test
-        (err, rowCount) => {
-            connection.close();
-            resolve(new Response(JSON.stringify({ rowCount })));
-        },
-        );
-
-        request.addParameter('id', 1);
-        connection.execSql(request);
-    });
-
-    connection.connect();
-    });
+    } catch (e) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({error: e}));
+    }; 
     }

@@ -4,7 +4,7 @@ import { httpServerHandler } from "cloudflare:node";
 import { data_to_sql } from "./communication/recieve.js";
 import { auth } from "./local/auth.js";
 
-//legacy
+//legacy -> will be decapritated
 import { legacy_data_to_sql } from "./communication/legacy/recieve.js";
 import { legacy_sql_to_data } from "./communication/legacy/send.js";
 
@@ -36,14 +36,12 @@ const server = http.createServer(async (req, res) => {
                 return;
             } else {
                 try {
-                const response = await data_to_sql(req,res,env);
-                const body = await response.text();
-                const code = response.status
-                res.writeHead(code, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(body))
+                    await data_to_sql(req,res,env);
+                    return;
                 } catch {
                     res.writeHead(500, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({error: "Internal server error"}));
+                    return;
                 };
             }
         }

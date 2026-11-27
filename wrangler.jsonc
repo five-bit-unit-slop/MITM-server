@@ -33,5 +33,11 @@
         "issues": {
             "enabled": true
         }
-    }
+    },
+    "hyperdrive": [
+        {
+            "binding": "HYPERDRIVE",
+            "id": "a301b8900e54401fa733e4a4ecf743b6"
+        }
+    ]
 }
