@@ -31,7 +31,7 @@ D1 is the source of truth for identity. TiDB does not contain users in the targe
 | `/auth/login` | POST | Implemented. Reads D1, verifies the password, creates a session token. |
 | `/auth/register` | POST | Stub. Checks `allow_registration` and returns 200 or 423. |
 | `/auth` | GET | Returns 404 with a pointer to `/auth/login` and `/auth/register`. |
-| `/api/sensor-data` | POST | Checks a non-empty Bearer token, runs `SELECT * FROM pg_tables`, returns the rows. No insert. |
+| `/api/sensor-data` | POST | Checks `allow_sensor_receiving`, requires a non-empty Bearer token, runs `SELECT * FROM pg_tables`, returns the rows. No insert. |
 | `/legacy/*` | - | Returns 404. |
 
 ## Auth Flow (login)
