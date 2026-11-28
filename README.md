@@ -96,7 +96,7 @@ communication/
 |--------|------|-------------|-------------|
 | `ID` | TEXT | PRIMARY KEY | User UUID |
 | `Username` | TEXT | NOT NULL, UNIQUE | Login username |
-| `Password_Hash` | TEXT | NOT NULL | Argon2id encoded hash |
+| `Password_Hash` | TEXT | NOT NULL | Argon2id encoded hash (planned: scrypt format `scrypt$N$r$p$salt$key`) |
 | `Created_At` | TEXT | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Registration time |
 | `Is_Active` | INTEGER | NOT NULL DEFAULT 1, CHECK(0,1) | Account enabled |
 
@@ -164,11 +164,26 @@ communication/
 
 ## Security Considerations
 
-- **Passwords:** Argon2id (16-byte salt, 19 MiB memory, 2 iterations, parallelism 1). Never stored plaintext.
+- **Passwords:** Argon2id (16-byte salt, 19 MiB memory, 2 iterations, parallelism 1). **Planned migration to scrypt** (see below). Never stored plaintext.
 - **Tokens:** 256-bit entropy, SHA-256 hashed before storage. Raw token returned once on login.
 - **Account enumeration:** Generic "Credentials invalid" error for both unknown user and wrong password.
 - **Feature flags:** All auth/sensor endpoints gated by KV settings (`allow_login`, `allow_registration`, `allow_sensor_receiving`).
 - **Transport:** HTTPS enforced by Cloudflare. D1 and Hyperdrive connections use TLS.
+
+### Planned: Migration to scrypt
+
+**Rationale:** Argon2id is not supported in Cloudflare Workers' `node:crypto` implementation. scrypt is the OWASP-recommended fallback when Argon2id is unavailable.
+
+- **Algorithm:** scrypt via `node:crypto.scrypt` / `scryptSync` (native, no external dependency)
+- **Parameters (planned):** N=16384, r=8, p=1 → ~16 MiB memory, within Workers 128 MB limit
+- **Format:** `scrypt$N$r$p$salt$key` (base64-encoded components)
+- **Verification:** constant-time comparison via `crypto.timingSafeEqual`
+- **Benchmark required:** verify CPU time fits within 10 ms Workers Free limit before deployment
+
+**References:**
+- Cloudflare Node.js Crypto compatibility
+- Node.js crypto.scrypt documentation
+- OWASP Password Storage Cheat Sheet
 
 ## Environment Bindings (wrangler.jsonc)
 
