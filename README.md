@@ -10,10 +10,10 @@ Pico W (WiFi)          DMZ Gateway (RPi)          Tkinter App
      ▼                        ▼                        ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                   Cloudflare Worker                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │   Hyperdrive │  │      D1     │  │       KV            │ │
-│  │   (TiDB)     │  │ (Identity)  │  │  (Feature Flags)    │ │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │   Hyperdrive │  │      D1     │  │       KV           │  │
+│  │   (TiDB)     │  │ (Identity)  │  │  (Feature Flags)   │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -123,7 +123,3 @@ Pico W (WiFi)          DMZ Gateway (RPi)          Tkinter App
 npm run dev    # wrangler dev on port 8080
 npm run deploy # wrangler deploy
 ```
-
----
-
-*Docs reflect current code. Items with [ ] are not implemented.*

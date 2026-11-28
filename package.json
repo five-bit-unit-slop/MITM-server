@@ -6,7 +6,7 @@
         "test": "node --test"
     },
     "dependencies": {
-        "hash-wasm": "^4.13.0",
+        "@better-auth/utils": "^0.5.1",
         "pg": "^8.23.1"
     },
     "devDependencies": {
